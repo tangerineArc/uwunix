@@ -1,0 +1,9 @@
+[SddmGreeterTheme]
+Name=Labyrinth
+Description=Clockwork Qylock Theme by @Darkkal44
+Author=tangerineArc
+Copyright=2026
+Type=sddm-theme
+MainScript=Main.qml
+ConfigFile=theme.conf
+QtVersion=6

@@ -1,0 +1,15 @@
+adjust-cell-height = 10%
+mouse-hide-while-typing = true
+scrollbar = never
+shell-integration = zsh
+
+font-family = JetBrainsMono Nerd Font
+font-size = 12
+font-feature = +calt, +liga, +dlig
+
+window-title-font-family = JetBrainsMono Nerd Font
+window-padding-x = 4
+window-padding-y = 4
+window-padding-balance = true
+window-padding-color = extend
+

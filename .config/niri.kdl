@@ -1,0 +1,88 @@
+prefer-no-csd
+binds {
+    // -- Spawn applications --
+    Mod+B {
+        spawn "ghostty" "-e" "bluetui"
+    }
+    Mod+C {
+        spawn "chromium"
+    }
+    Mod+F {
+        spawn "ghostty" "-e" "yazi"
+    }
+    Mod+Escape {
+        spawn "ghostty" "-e" "btm"
+    }
+    Mod+Return {
+        spawn "ghostty"
+    }
+    // -- Misc --
+    Mod+R {
+        switch-preset-column-width
+    }
+    Mod+Q {
+        close-window
+    }
+    Mod+Alt+L {
+        spawn "swaylock" "-f"
+    }
+    Mod+Shift+E {
+        quit
+    }
+    Mod+Space {
+        fullscreen-window
+    }
+    // -- Quick controls --
+    Print {
+        screenshot
+    }
+    XF86AudioRaiseVolume {
+        spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "0.05+"
+    }
+    XF86AudioLowerVolume {
+        spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"
+    }
+    XF86AudioMute allow-when-locked=true {
+        spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"
+    }
+    XF86MonBrightnessUp allow-when-locked=true {
+        spawn "brightnessctl" "set" "10%+"
+    }
+    XF86MonBrightnessDown allow-when-locked=true {
+        spawn "brightnessctl" "set" "10%-"
+    }
+}
+input {
+    touchpad {
+        accel-speed 0.8
+        natural-scroll
+        tap
+    }
+}
+layout {
+    always-center-single-column
+    gaps 12
+    default-column-width {
+        proportion 0.8
+    }
+    focus-ring {
+        width 3
+    }
+    shadow {
+        on
+    }
+    preset-column-widths {
+        proportion 1.0
+        proportion 0.8
+        proportion 0.5
+    }
+}
+output "eDP-1" {
+    scale 1.0
+}
+window-rule {
+    clip-to-geometry true
+    draw-border-with-background false
+    geometry-corner-radius 8
+}
+
