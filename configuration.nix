@@ -6,7 +6,7 @@
 }: let
   labyrinth-sddm = pkgs.stdenv.mkDerivation {
     name = "labyrinth-sddm";
-    src = ./.config/sddm;
+    src = ./config/sddm;
 
     installPhase = ''
       mkdir -p $out/share/sddm/themes/labyrinth-sddm

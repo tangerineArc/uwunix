@@ -1,3 +1,6 @@
+theme = Gruvbox Material Dark
+background = #111111
+
 adjust-cell-height = 10%
 mouse-hide-while-typing = true
 scrollbar = never

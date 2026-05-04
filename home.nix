@@ -6,6 +6,15 @@
 }: {
   nixpkgs.config.allowUnfree = true;
 
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
+
   home = {
     homeDirectory = "/home/tangerine";
     # This value determines the Home Manager release that your
@@ -34,6 +43,7 @@
       pkgs.pkg-config # dependency
       pkgs.ripgrep # dependency
       pkgs.rustup
+      pkgs.swaybg
       pkgs.tree-sitter # dependency
       pkgs.zoxide # dependency
     ];
@@ -176,12 +186,12 @@
 
   xdg.configFile = {
     # Ghostty config
-    "ghostty/config.ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/.config/config.ghostty";
+    "ghostty/config.ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.ghostty";
 
     # Neovim (kickstart.nvim) config
-    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/.config/nvim";
+    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/nvim";
 
     # Niri config
-    "niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/.config/niri.kdl";
+    "niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri.kdl";
   };
 }
