@@ -30,29 +30,57 @@
     };
 
     packages = [
+      pkgs.awww
       pkgs.bluetui
       pkgs.brightnessctl
+      pkgs.fastfetch
       pkgs.fd # dependency
+      pkgs.fuzzel
       pkgs.fzf # dependency
       pkgs.gcc
       pkgs.ghostty
       pkgs.gnumake
+      pkgs.imv
       pkgs.lsd
       pkgs.neovim
       pkgs.nodejs
       pkgs.pkg-config # dependency
       pkgs.ripgrep # dependency
       pkgs.rustup
-      pkgs.swaybg
+      pkgs.smile
       pkgs.tree-sitter # dependency
+      pkgs.wl-clipboard # dependency
       pkgs.zoxide # dependency
     ];
+
+    pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
+      size = 24;
+    };
   };
 
   programs = {
     bottom.enable = true;
-    chromium.enable = true;
     home-manager.enable = true;
+
+    chromium = {
+      enable = true;
+
+      commandLineArgs = [
+        "--enable-features=UseOzonePlatform"
+        "--ozone-platform=wayland"
+        "--load-extension=${config.home.homeDirectory}/.config/chromium-theme"
+      ];
+
+      extensions = [
+        # Base16 Everything
+        {id = "jmofeafhkeohbpbedgbnkdlfaomjbnkf";}
+        # uBlock Origin Lite
+        {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";}
+      ];
+    };
 
     git = {
       enable = true;
@@ -85,6 +113,7 @@
         add_newline = false;
         format = "$all$line_break$time$character";
         git_branch.symbol = " ";
+        lua.symbol = " ";
         package.symbol = "󰏗 ";
         rust.symbol = " ";
 
@@ -165,26 +194,68 @@
     };
   };
 
-  services.gammastep = {
-    enable = true;
-    provider = "manual";
+  services = {
+    cliphist.enable = true;
 
-    latitude = 0.0;
-    longitude = 0.0;
+    gammastep = {
+      enable = true;
+      provider = "manual";
 
-    settings.general = {
-      brightness-day = "1.0";
-      brightness-night = "1.0";
-      fade = 0;
+      latitude = 0.0;
+      longitude = 0.0;
+
+      settings.general = {
+        brightness-day = "1.0";
+        brightness-night = "1.0";
+        fade = 0;
+      };
+
+      temperature = {
+        day = 4000;
+        night = 4000;
+      };
     };
 
-    temperature = {
-      day = 4000;
-      night = 4000;
+    mako = {
+      enable = true;
+
+      settings = {
+        default-timeout = 5000; # 5000ms = 5s
+        background-color = "#1d2021";
+        border-color = "#665c54";
+        border-radius = 10;
+        font = "JetBrainsMono Nerd Font 11";
+        height = 500;
+        padding = "15,20";
+        text-color = "#fbf1c7";
+        width = 400;
+      };
+    };
+
+    swayidle = {
+      enable = true;
+      events.before-sleep = "${pkgs.swaylock}/bin/swaylock -f";
+
+      timeouts = [
+        {
+          command = "${pkgs.swaylock}/bin/swaylock -f";
+          timeout = 300; # 300s = 5 minutes
+        }
+        {
+          command = "${pkgs.systemd}/bin/systemctl suspend";
+          timeout = 600; # 600s = 10 minutes
+        }
+      ];
     };
   };
 
   xdg.configFile = {
+    # Chromium theme config
+    "chromium-theme/manifest.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/chromium-theme/manifest.json";
+
+    # Fastfetch config
+    "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/fastfetch/config.jsonc";
+
     # Ghostty config
     "ghostty/config.ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.ghostty";
 
