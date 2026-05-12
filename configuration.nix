@@ -5,12 +5,12 @@
   ...
 }: let
   labyrinth-sddm = pkgs.stdenv.mkDerivation {
-    name = "labyrinth-sddm";
+    name = "nier-automata-sddm";
     src = ./config/sddm;
 
     installPhase = ''
-      mkdir -p $out/share/sddm/themes/labyrinth-sddm
-      cp -r * $out/share/sddm/themes/labyrinth-sddm/
+      mkdir -p $out/share/sddm/themes/nier-automata-sddm
+      cp -r * $out/share/sddm/themes/nier-automata-sddm/
     '';
   };
 in {
@@ -39,10 +39,10 @@ in {
 
   # List packages installed in system profile.
   environment.systemPackages = [
+    labyrinth-sddm
     pkgs.unzip
     pkgs.vim
     pkgs.wget
-    labyrinth-sddm
   ];
 
   fonts = {
@@ -98,7 +98,11 @@ in {
 
     displayManager.sddm = {
       enable = true;
-      theme = "labyrinth-sddm";
+      theme = "nier-automata-sddm";
+      extraPackages = [
+        pkgs.qt6.qt5compat # dependency
+        pkgs.qt6.qtmultimedia # dependency
+      ];
     };
 
     kmscon = {
@@ -146,7 +150,7 @@ in {
     };
 
     pipewire = {
-      enable = true; # Enable sound.
+      enable = true;
       pulse.enable = true;
     };
 
@@ -175,10 +179,6 @@ in {
     home = "/home/tangerine";
     isNormalUser = true;
     shell = pkgs.zsh;
-
-    # packages = with pkgs; [
-    #  vim
-    #];
   };
 
   # Copy the NixOS configuration file and link it from the resulting system

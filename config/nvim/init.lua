@@ -496,6 +496,7 @@ require('lazy').setup({
         -- pyright = {},
         nil_ls = {},
         rust_analyzer = {},
+        taplo = {},
 
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -558,6 +559,10 @@ require('lazy').setup({
         vim.lsp.config(name, server)
         vim.lsp.enable(name)
       end
+
+      -- Manually configure and enable qmlls natively to bypass Mason
+      vim.lsp.config('qmlls', {})
+      vim.lsp.enable 'qmlls'
     end,
   },
 
@@ -584,6 +589,9 @@ require('lazy').setup({
           kdl = true,
           lua = true,
           nix = true,
+          qml = true,
+          rust = true,
+          toml = true,
           -- python = true,
         }
         if enabled_filetypes[vim.bo[bufnr].filetype] then
@@ -601,6 +609,7 @@ require('lazy').setup({
         kdl = { 'kdlfmt' },
         nix = { 'alejandra' },
         rust = { 'rustfmt' },
+        toml = { 'taplo' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

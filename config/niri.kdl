@@ -1,7 +1,7 @@
 // -- No client-side decorations --
 prefer-no-csd
 // -- Disable saving screenshots to disk --
-screenshot-path null
+// screenshot-path null
 // -- Startup services --
 spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img /home/tangerine/.dotfiles/config/anime_skull.png --transition-type none"
 // -- Keybinds --
@@ -107,6 +107,20 @@ input {
         tap
     }
 }
+// -- Application-specific layer rules --
+layer-rule {
+    match namespace="^launcher$"
+    geometry-corner-radius 16
+    opacity 0.9
+    background-effect {
+        blur true
+        saturation 2
+        xray false
+    }
+    shadow {
+        on
+    }
+}
 // -- Window layout rules --
 layout {
     always-center-single-column
@@ -173,7 +187,9 @@ window-rule {
 window-rule {
     exclude app-id="imv"
     exclude app-id="mpv"
+    exclude app-id="org.gnome.Snapshot"
     exclude app-id="chromium" title="YouTube"
+    exclude app-id="youtube"
     opacity 0.95
 }
 window-rule {

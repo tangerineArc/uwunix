@@ -1,5 +1,5 @@
 theme = Gruvbox Material Dark
-background = #111111
+background = #1d2021
 
 adjust-cell-height = 10%
 mouse-hide-while-typing = true
