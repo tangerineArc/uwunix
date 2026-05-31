@@ -22,7 +22,7 @@ in {
   ];
 
   i18n.defaultLocale = "en_US.UTF-8";
-  security.pam.services.swaylock = {};
+  location.provider = "geoclue2";
   time.timeZone = "Asia/Kolkata";
 
   # Use the systemd-boot EFI boot loader.
@@ -91,10 +91,16 @@ in {
     # };
   };
 
+  security = {
+    pam.services.swaylock = {};
+    polkit.enable = true;
+  };
+
   services = {
     cloudflare-warp.enable = true;
-    printing.enable = true; # Enable CUPS to print documents.
     # openssh.enable = true; # Enable the OpenSSH daemon.
+    power-profiles-daemon.enable = true;
+    printing.enable = true; # Enable CUPS to print documents.
 
     displayManager.sddm = {
       enable = true;
@@ -103,6 +109,11 @@ in {
         pkgs.qt6.qt5compat # dependency
         pkgs.qt6.qtmultimedia # dependency
       ];
+    };
+
+    geoclue2.appConfig.zen = {
+      isAllowed = true;
+      isSystem = true;
     };
 
     kmscon = {
@@ -158,10 +169,6 @@ in {
       enable = true; # Enable the X11 windowing system.
       xkb.layout = "us"; # Configure keymap in X11
       # xkb.options = "eurosign:e,caps:escape";
-
-      displayManager.setupCommands = ''
-        ${pkgs.redshift}/bin/redshift -m randr -P -O 4000 &
-      '';
     };
   };
 

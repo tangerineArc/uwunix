@@ -17,6 +17,12 @@ vim.g.have_nerd_font = true
 vim.o.number = true
 vim.o.relativenumber = true
 
+-- Tabs and spaces
+vim.o.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
+vim.o.softtabstop = 2 -- Number of spaces that a <Tab> counts for while editing
+vim.o.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
+vim.o.expandtab = true -- Convert tabs to spaces
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
@@ -493,18 +499,17 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        bashls = {},
+        cssls = {},
         nil_ls = {},
+        pyright = {},
         rust_analyzer = {},
+        stylua = {},
         taplo = {},
+        ts_ls = {},
 
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-
-        stylua = {}, -- Used to format Lua code
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -585,14 +590,20 @@ require('lazy').setup({
       format_on_save = function(bufnr)
         -- You can specify filetypes to autoformat on save here:
         local enabled_filetypes = {
+          css = true,
           json = true,
+          jsonc = true,
           kdl = true,
           lua = true,
           nix = true,
+          python = true,
           qml = true,
           rust = true,
+          scss = true,
+          sh = true,
           toml = true,
-          -- python = true,
+          typescript = true,
+          typescriptreact = true,
         }
         if enabled_filetypes[vim.bo[bufnr].filetype] then
           return { timeout_ms = 500 }
@@ -605,14 +616,18 @@ require('lazy').setup({
       },
       -- You can also specify external formatters in here.
       formatters_by_ft = {
+        css = { 'prettier' },
         json = { 'prettier' },
+        jsonc = { 'prettier' },
         kdl = { 'kdlfmt' },
         nix = { 'alejandra' },
+        python = { 'isort', 'black' },
         rust = { 'rustfmt' },
+        scss = { 'prettier' },
+        sh = { 'shfmt' },
         toml = { 'taplo' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
@@ -718,7 +733,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       require('gruvbox').setup {
-        -- transparent_mode = false,
+        transparent_mode = true,
         contrast = 'hard', -- "hard", "soft", or "" (empty string for default)
         overrides = {
           CursorLineNr = { bg = 'NONE' },

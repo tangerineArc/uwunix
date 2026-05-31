@@ -4,6 +4,7 @@ prefer-no-csd
 // screenshot-path null
 // -- Startup services --
 spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img /home/tangerine/.dotfiles/config/anime_skull.png --transition-type none"
+spawn-at-startup "wl-gammarelay-rs"
 // -- Keybinds --
 binds {
     // -- Spawn applications --
@@ -17,7 +18,7 @@ binds {
         spawn "sh" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
     }
     Mod+Escape hotkey-overlay-title="Bottom: Process Viewer" {
-        spawn "ghostty" "-e" "btm"
+        spawn "ghostty" "-e" "btop"
     }
     Mod+Period hotkey-overlay-title="Smile: Emoji Picker" {
         spawn "smile"
@@ -32,17 +33,44 @@ binds {
     Mod+F hotkey-overlay-title="Maximize Focused Window" {
         fullscreen-window
     }
+    Mod+H {
+        focus-column-left
+    }
+    Mod+J {
+        focus-workspace-down
+    }
+    Mod+K {
+        focus-workspace-up
+    }
+    Mod+L {
+        focus-column-right
+    }
     Mod+Q {
         close-window
     }
     Mod+R {
         switch-preset-column-width
     }
-    Mod+Equal hotkey-overlay-title="Increase Focused Window Width" {
+    Mod+W {
+        toggle-overview
+    }
+    Mod+Equal hotkey-overlay-title="Focused Window Width +5%" {
         set-column-width "+5%"
     }
-    Mod+Minus hotkey-overlay-title="Decrease Focused Window Width" {
+    Mod+Minus hotkey-overlay-title="Focused Window Width -5%" {
         set-column-width "-5%"
+    }
+    Mod+Shift+H {
+        move-column-left
+    }
+    Mod+Shift+J {
+        move-window-to-workspace-down
+    }
+    Mod+Shift+K {
+        move-window-to-workspace-up
+    }
+    Mod+Shift+L {
+        move-column-right
     }
     Mod+Shift+R hotkey-overlay-title="Set Focused Window Width to 50%" {
         set-column-width "50%"
@@ -55,10 +83,10 @@ binds {
     }
     // -- Manage session --
     Mod+Alt+L hotkey-overlay-title="Lock Session" {
-        spawn "swaylock" "-f"
+        spawn "swaylock"
     }
     Mod+Alt+S hotkey-overlay-title="Suspend Session" {
-        spawn "sh" "-c" "swaylock -f && systemctl suspend"
+        spawn "sh" "-c" "swaylock && systemctl suspend"
     }
     Mod+Alt+E {
         quit
@@ -67,14 +95,17 @@ binds {
     Print {
         screenshot
     }
-    XF86AudioRaiseVolume {
-        spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "0.05+"
-    }
-    XF86AudioLowerVolume {
+    XF86AudioLowerVolume allow-when-locked=true {
         spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"
     }
     XF86AudioMute allow-when-locked=true {
         spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"
+    }
+    XF86AudioPlay allow-when-locked=true {
+        spawn "playerctl" "play-pause"
+    }
+    XF86AudioRaiseVolume allow-when-locked=true {
+        spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "0.05+"
     }
     XF86MonBrightnessUp allow-when-locked=true {
         spawn "brightnessctl" "set" "10%+"
@@ -109,9 +140,7 @@ input {
 }
 // -- Application-specific layer rules --
 layer-rule {
-    match namespace="^launcher$"
-    geometry-corner-radius 16
-    opacity 0.9
+    exclude namespace="^notifications$"
     background-effect {
         blur true
         saturation 2
@@ -120,6 +149,19 @@ layer-rule {
     shadow {
         on
     }
+}
+layer-rule {
+    match namespace="^launcher$"
+    geometry-corner-radius 16
+    opacity 0.9
+}
+layer-rule {
+    match namespace="minos-bar"
+    geometry-corner-radius 40
+}
+layer-rule {
+    match namespace="minos"
+    geometry-corner-radius 20
 }
 // -- Window layout rules --
 layout {
@@ -158,14 +200,6 @@ overview {
 }
 // -- Window switcher settings --
 recent-windows {
-    binds {
-        Mod+Tab {
-            next-window
-        }
-        Mod+grave {
-            previous-window
-        }
-    }
     highlight {
         active-color "#83a598aa"
         corner-radius 10
@@ -185,11 +219,17 @@ window-rule {
 }
 // -- Application-specific window rules --
 window-rule {
+    exclude title="Crunchyroll"
     exclude app-id="imv"
     exclude app-id="mpv"
     exclude app-id="org.gnome.Snapshot"
+    exclude app-id="chromium" title="Crunchyroll"
     exclude app-id="chromium" title="YouTube"
-    exclude app-id="youtube"
+    exclude title="^YouTube$"
+    opacity 0.95
+}
+window-rule {
+    match title="YouTube Music"
     opacity 0.95
 }
 window-rule {
@@ -200,6 +240,13 @@ window-rule {
     }
     default-window-height {
         fixed 490
+    }
+}
+window-rule {
+    match app-id="zed" title="Settings"
+    open-floating true
+    background-effect {
+        xray false
     }
 }
 

@@ -7,6 +7,10 @@
 }: {
   nixpkgs.config.allowUnfree = true;
 
+  imports = [
+    inputs.minos.homeManagerModules.default
+  ];
+
   dconf = {
     enable = true;
     settings = {
@@ -40,15 +44,17 @@
     };
 
     packages = [
-      inputs.zen-browser.packages."${pkgs.system}".default
+      inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
+
+      pkgs.adwaita-icon-theme
       pkgs.awww
       pkgs.bluetui
       pkgs.brightnessctl
-      pkgs.btop
       pkgs.fastfetch
       pkgs.fd # dependency
       pkgs.ffmpeg
       pkgs.fuzzel
+      # pkgs.gammastep
       pkgs.gcc
       pkgs.ghostty
       pkgs.gnumake
@@ -57,6 +63,9 @@
       pkgs.neovim
       pkgs.nodejs
       pkgs.pkg-config # dependency
+      pkgs.playerctl
+      pkgs.polkit_gnome
+      pkgs.proton-vpn
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
       pkgs.ripgrep # dependency
@@ -65,6 +74,8 @@
       pkgs.snapshot
       pkgs.tree-sitter # dependency
       pkgs.wl-clipboard
+      pkgs.wl-gammarelay-rs
+      pkgs.zed-editor
       pkgs.zoxide # dependency
     ];
 
@@ -82,11 +93,19 @@
   };
 
   programs = {
-    bottom.enable = true;
     home-manager.enable = true;
+
+    btop = {
+      enable = true;
+      settings = {
+        color_theme = "gruvbox_dark_v2";
+        theme_background = false;
+      };
+    };
 
     chromium = {
       enable = true;
+      package = pkgs.chromium.override {enableWideVine = true;};
 
       commandLineArgs = [
         "--enable-features=UseOzonePlatform"
@@ -100,6 +119,12 @@
         # uBlock Origin Lite
         {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";}
       ];
+    };
+
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
     };
 
     fzf = {
@@ -139,7 +164,9 @@
         format = "$all$line_break$time$character";
         git_branch.symbol = " ";
         lua.symbol = " ";
+        nix_shell.symbol = " ";
         package.symbol = "󰏗 ";
+        python.symbol = "󰌠 ";
         rust.symbol = " ";
 
         character = {
@@ -150,11 +177,6 @@
         git_status = {
           format = "([$all_status$ahead_behind]($style) )";
           modified = "[+](bold red)";
-        };
-
-        nix_shell = {
-          symbol = "❄ ";
-          format = "via [$symbol$state($name)]($style) ";
         };
 
         time = {
@@ -168,10 +190,10 @@
     swaylock = {
       enable = true;
 
-      settings = {
-        font = "JetBrainsMono Nerd Font";
-        indicator-idle-visible = true;
-      };
+      # settings = {
+      #   font = "JetBrainsMono Nerd Font";
+      #   indicator-idle-visible = true;
+      # };
     };
 
     yazi = {
@@ -212,25 +234,8 @@
 
   services = {
     cliphist.enable = true;
-
-    gammastep = {
-      enable = true;
-      provider = "manual";
-
-      latitude = 0.0;
-      longitude = 0.0;
-
-      settings.general = {
-        brightness-day = "1.0";
-        brightness-night = "1.0";
-        fade = 0;
-      };
-
-      temperature = {
-        day = 4000;
-        night = 4000;
-      };
-    };
+    minos.enable = true;
+    playerctld.enable = true;
 
     mako = {
       enable = true;
@@ -270,6 +275,24 @@
     };
   };
 
+  systemd.user.services.polkit-gnome-authentication-agent-1 = {
+    Unit = {
+      Description = "polkit-gnome-authentication-agent-1";
+      Wants = ["graphical-session.target"];
+      After = ["graphical-session.target"];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+    };
+    Install = {
+      WantedBy = ["graphical-session.target"];
+    };
+  };
+
   xdg = {
     configFile = {
       # Chromium theme config
@@ -288,19 +311,33 @@
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/nvim";
 
       # Niri config
-      "niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri.kdl";
+      "niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri";
+
+      # Swaylock config
+      "swaylock/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.swaylock";
 
       # Yazi config
       "yazi/yazi.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/yazi.toml";
+
+      # Zed config
+      "zed".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/zed";
     };
 
     desktopEntries = {
+      crunchyroll = {
+        categories = ["Network" "Video" "X-Anime"];
+        exec = "chromium --app=https://crunchyroll.com %U";
+        icon = "crunchyroll";
+        name = "Crunchyroll";
+        terminal = false;
+      };
+
       gemini = {
         categories = ["Network" "X-AI"];
         exec = "chromium --app=https://gemini.google.com %U";
+        icon = "/home/tangerine/.dotfiles/config/icons/google-gemini.svg";
         name = "Google Gemini";
         terminal = false;
-        icon = "/home/tangerine/.dotfiles/config/icons/google-gemini.svg";
       };
 
       whatsapp = {

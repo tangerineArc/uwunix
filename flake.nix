@@ -9,6 +9,11 @@
       url = "github:nix-community/home-manager";
     };
 
+    minos = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:tangerineArc/minos";
+    };
+
     zen-browser = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:youwen5/zen-browser-flake";
