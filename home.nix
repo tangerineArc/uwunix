@@ -3,6 +3,9 @@
   pkgs,
   lib,
   inputs,
+  user,
+  gitName,
+  gitEmail,
   ...
 }: {
   nixpkgs.config.allowUnfree = true;
@@ -30,11 +33,11 @@
   };
 
   home = {
-    homeDirectory = "/home/tangerine";
+    homeDirectory = "/home/${user}";
     # This value determines the Home Manager release that your
     # configuration is compatible with. Match it with your system.
     stateVersion = "25.11";
-    username = "tangerine";
+    username = user;
 
     activation = {
       installRust = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -54,7 +57,6 @@
       pkgs.fd # dependency
       pkgs.ffmpeg
       pkgs.fuzzel
-      # pkgs.gammastep
       pkgs.gcc
       pkgs.ghostty
       pkgs.gnumake
@@ -139,8 +141,8 @@
         init.defaultBranch = "main";
 
         user = {
-          email = "swagatam.pati.2104@gmail.com";
-          name = "Swagatam Pati";
+          email = gitEmail;
+          name = gitName;
         };
       };
     };
@@ -335,7 +337,7 @@
       gemini = {
         categories = ["Network" "X-AI"];
         exec = "chromium --app=https://gemini.google.com %U";
-        icon = "/home/tangerine/.dotfiles/config/icons/google-gemini.svg";
+        icon = "/home/${user}/.dotfiles/config/icons/google-gemini.svg";
         name = "Google Gemini";
         terminal = false;
       };

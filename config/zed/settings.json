@@ -10,9 +10,8 @@
   "agent": {
     "default_profile": "ask",
     "default_model": {
-      "effort": "low",
-      "provider": "zed.dev",
-      "model": "gpt-5.5",
+      "provider": "google",
+      "model": "gemini-3.1-pro-preview",
       "enable_thinking": true
     },
     "favorite_models": [],

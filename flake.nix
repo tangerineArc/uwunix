@@ -26,12 +26,24 @@
     home-manager,
     ...
   } @ inputs: let
+    # --- CONFIGURATION VARIABLES ---
+    user = "tangerine";
+    host = "labyrinth";
+    gitName = "Swagatam Pati";
+    gitEmail = "swagatam.pati.2104@gmail.com";
+    # --- --- --- --- --- --- --- ---
+
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
   in {
     nixosConfigurations = {
-      "labyrinth" = nixpkgs.lib.nixosSystem {
+      "${host}" = nixpkgs.lib.nixosSystem {
         inherit system;
+
+        specialArgs = {inherit user host;};
 
         modules = [
           ./configuration.nix
@@ -41,10 +53,10 @@
     };
 
     homeConfigurations = {
-      "tangerine@labyrinth" = home-manager.lib.homeManagerConfiguration {
+      "${user}@${host}" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        extraSpecialArgs = {inherit inputs;};
+        extraSpecialArgs = {inherit inputs user host gitName gitEmail;};
 
         modules = [
           ./home.nix

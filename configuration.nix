@@ -2,6 +2,8 @@
   config,
   lib,
   pkgs,
+  user,
+  host,
   ...
 }: let
   labyrinth-sddm = pkgs.stdenv.mkDerivation {
@@ -59,7 +61,7 @@ in {
   };
 
   networking = {
-    hostName = "labyrinth";
+    hostName = host;
     networkmanager.enable = true; # Configure network connections with nmcli or nmtui.
 
     # Open ports in the firewall.
@@ -179,11 +181,11 @@ in {
     }
   ];
 
-  # Define a user account.
-  users.users.tangerine = {
-    description = "Tangerine Arc";
+  # Define a user account dynamically.
+  users.users.${user} = {
+    description = "Primary User";
     extraGroups = ["wheel"];
-    home = "/home/tangerine";
+    home = "/home/${user}";
     isNormalUser = true;
     shell = pkgs.zsh;
   };
