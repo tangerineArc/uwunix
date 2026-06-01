@@ -16,14 +16,14 @@
           "#689d6aff",
           "#d65d0eff"
         ],
-        "vim.mode.text": "#1d2021", // change this
+        "vim.mode.text": "#1d2021",
         "vim.normal.background": "#fe8019",
         "vim.visual.background": "#b8bb26",
         "vim.insert.background": "#fabd2f",
         "vim.visual_line.background": "#fbf1c7",
         "vim.visual_block.background": "#d3869b",
         "vim.replace.background": "#458588",
-        // "background.appearance": "blurred",
+        "background.appearance": "blurred",
         "border": "#3c3836aa",
         "border.variant": "#494340aa",
         "border.focused": "#303a36aa",

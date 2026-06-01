@@ -1,5 +1,4 @@
-theme = Gruvbox Material Dark
-background = #1d2021
+theme = "/home/tangerine/.cache/matugen/colors.ghostty"
 
 adjust-cell-height = 10%
 mouse-hide-while-typing = true

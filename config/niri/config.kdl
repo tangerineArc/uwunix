@@ -1,9 +1,10 @@
+include "~/.cache/matugen/niri.kdl"
 // -- No client-side decorations --
 prefer-no-csd
 // -- Disable saving screenshots to disk --
 // screenshot-path null
 // -- Startup services --
-spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img /home/tangerine/.dotfiles/config/anime_skull.png --transition-type none"
+spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img ~/.dotfiles/config/anime_skull.png --transition-type none"
 spawn-at-startup "wl-gammarelay-rs"
 // -- Keybinds --
 binds {
@@ -143,7 +144,6 @@ layer-rule {
     exclude namespace="^notifications$"
     background-effect {
         blur true
-        saturation 2
         xray false
     }
     shadow {
@@ -152,24 +152,18 @@ layer-rule {
 }
 layer-rule {
     match namespace="^launcher$"
-    geometry-corner-radius 16
-    opacity 0.9
+    match namespace="minos"
+    geometry-corner-radius 20
 }
 layer-rule {
     match namespace="minos-bar"
     geometry-corner-radius 40
-}
-layer-rule {
-    match namespace="minos"
-    geometry-corner-radius 20
 }
 // -- Window layout rules --
 layout {
     always-center-single-column
     gaps 8
     border {
-        active-color "#83a59822"
-        inactive-color "#1d202122"
         width 6
     }
     default-column-width {
@@ -177,9 +171,6 @@ layout {
     }
     focus-ring {
         off
-    }
-    insert-hint {
-        color "83a59880"
     }
     shadow {
         on
@@ -194,14 +185,9 @@ layout {
 output "eDP-1" {
     scale 1.0
 }
-// -- Overview settings --
-overview {
-    backdrop-color "#111111"
-}
 // -- Window switcher settings --
 recent-windows {
     highlight {
-        active-color "#83a598aa"
         corner-radius 10
     }
 }
@@ -212,25 +198,24 @@ window-rule {
     geometry-corner-radius 10
     background-effect {
         blur true
-        noise 0.2
-        saturation 3
         xray true
     }
 }
 // -- Application-specific window rules --
 window-rule {
-    exclude title="Crunchyroll"
     exclude app-id="imv"
     exclude app-id="mpv"
     exclude app-id="org.gnome.Snapshot"
     exclude app-id="chromium" title="Crunchyroll"
     exclude app-id="chromium" title="YouTube"
+    exclude app-id="zed"
+    exclude title="Crunchyroll"
     exclude title="^YouTube$"
-    opacity 0.95
+    opacity 0.9
 }
 window-rule {
     match title="YouTube Music"
-    opacity 0.95
+    opacity 0.9
 }
 window-rule {
     match app-id="smile"

@@ -2,10 +2,8 @@ daemonize
 ignore-empty-password
 show-failed-attempts
 
-image=/home/tangerine/.dotfiles/config/nixos.png
-
+image=~/.dotfiles/assets/wallpapers/mitsuri.png
 font="JetBrainsMono Nerd Font"
-
 
 indicator-radius=240
 indicator-thickness=20

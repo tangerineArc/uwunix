@@ -25,7 +25,7 @@
   },
   "colorize_brackets": true,
   "icon_theme": {
-    "mode": "dark",
+    "mode": "light",
     "light": "Colored Zed Icons Theme Dark",
     "dark": "Colored Zed Icons Theme Dark"
   },
@@ -124,6 +124,6 @@
   "theme": {
     "mode": "dark",
     "light": "Gruvbox Light",
-    "dark": "Gruvbox Dark Hard"
+    "dark": "Tangerine Dark"
   }
 }

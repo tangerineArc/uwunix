@@ -50,6 +50,7 @@
       inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
 
       pkgs.adwaita-icon-theme
+      pkgs.adw-gtk3 # dependency
       pkgs.awww
       pkgs.bluetui
       pkgs.brightnessctl
@@ -59,9 +60,11 @@
       pkgs.fuzzel
       pkgs.gcc
       pkgs.ghostty
+      pkgs.glib # dependency
       pkgs.gnumake
       pkgs.imv
       pkgs.lsd
+      pkgs.matugen
       pkgs.neovim
       pkgs.nodejs
       pkgs.pkg-config # dependency
@@ -100,7 +103,7 @@
     btop = {
       enable = true;
       settings = {
-        color_theme = "gruvbox_dark_v2";
+        color_theme = "matugen";
         theme_background = false;
       };
     };
@@ -297,8 +300,11 @@
 
   xdg = {
     configFile = {
+      # Btop theme config
+      "btop/themes/matugen.theme".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.cache/matugen/btop.theme";
+
       # Chromium theme config
-      "chromium-theme/manifest.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/chromium-theme/manifest.json";
+      "chromium-theme/manifest.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.cache/matugen/chromium-theme.json";
 
       # Fastfetch config
       "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/fastfetch/config.jsonc";
@@ -308,6 +314,19 @@
 
       # Ghostty config
       "ghostty/config.ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.ghostty";
+
+      # Gtk-3.0 css
+      "gtk-3.0/gtk.css".text = ''
+        @import 'colors.css';
+      '';
+
+      # Gtk-4.0 css
+      "gtk-4.0/gtk.css".text = ''
+        @import 'colors.css';
+      '';
+
+      # Matugen config
+      "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/matugen";
 
       # Neovim (kickstart.nvim) config
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/nvim";
