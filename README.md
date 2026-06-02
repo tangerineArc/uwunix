@@ -1,3 +1,6 @@
+# UWUNIX
+![showcase](./assets/showcase.png)
+
 ## Installation Guide
 
 ### 1. Boot from NixOS Live USB
