@@ -72,11 +72,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780236099,
-        "narHash": "sha256-ZVxCugtW9bWnMfgAGabwHg0AiSnjysV2uD5i/QLTETw=",
+        "lastModified": 1780401888,
+        "narHash": "sha256-KI2re71CoBgaj8CwcZ5Y8kHguNx24VSowggOu2VRcuw=",
         "owner": "tangerineArc",
         "repo": "minos",
-        "rev": "4b2f82b536d9df5f2bee4a69861fc4729ad67553",
+        "rev": "a0ffa9e51a5c85f8a26550b7aee7278822028112",
         "type": "github"
       },
       "original": {

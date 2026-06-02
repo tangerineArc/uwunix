@@ -8,6 +8,11 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "agent": {
+    "inline_assistant_model": {
+      "provider": "zed.dev",
+      "model": "gpt-5.5",
+      "enable_thinking": false
+    },
     "default_profile": "ask",
     "default_model": {
       "provider": "google",

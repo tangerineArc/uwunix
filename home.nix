@@ -44,6 +44,20 @@
         ${pkgs.rustup}/bin/rustup default stable
         ${pkgs.rustup}/bin/rustup component add rust-analyzer
       '';
+
+      setupDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p "$HOME/Devel/"
+        mkdir -p "$HOME/Documents/"
+        mkdir -p "$HOME/Downloads/"
+        mkdir -p "$HOME/Pictures/Screenshots/"
+        mkdir -p "$HOME/Pictures/Wallpapers/"
+      '';
+
+      setupDefaultWallpaper = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        if [ ! -f "$HOME/.cache/current-wallpaper" ]; then
+          ln -sf "$HOME/.dotfiles/assets/nixos-dark.png" "$HOME/.cache/current-wallpaper"
+        fi
+      '';
     };
 
     packages = [
@@ -82,6 +96,22 @@
       pkgs.wl-gammarelay-rs
       pkgs.zed-editor
       pkgs.zoxide # dependency
+
+      (pkgs.writeShellScriptBin
+        "fresco"
+        ''
+          IMAGE=$(readlink -f "$1")
+
+          if [ -z "$IMAGE" ] || [ ! -f "$IMAGE" ]; then
+            echo "Usage: fresco <path-to-wallpaper>"
+            exit 1
+          fi
+
+          ln -sf "$IMAGE" ~/.cache/current-wallpaper
+
+          awww img "$IMAGE" --transition-type random
+          matugen image "$IMAGE" -m dark -t scheme-tonal-spot --source-color-index 0
+        '')
     ];
 
     pointerCursor = {

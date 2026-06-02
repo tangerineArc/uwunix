@@ -4,7 +4,7 @@ prefer-no-csd
 // -- Disable saving screenshots to disk --
 // screenshot-path null
 // -- Startup services --
-spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img ~/.dotfiles/config/anime_skull.png --transition-type none"
+spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img ~/.cache/current-wallpaper --transition-type random"
 spawn-at-startup "wl-gammarelay-rs"
 // -- Keybinds --
 binds {
@@ -210,7 +210,7 @@ window-rule {
     exclude app-id="chromium" title="YouTube"
     exclude app-id="zed"
     exclude title="Crunchyroll"
-    exclude title="^YouTube$"
+    exclude title="YouTube"
     opacity 0.9
 }
 window-rule {

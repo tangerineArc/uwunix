@@ -28,6 +28,10 @@ input_path = "~/.dotfiles/config/matugen/templates/gtk.css"
 output_path = "~/.config/gtk-4.0/colors.css"
 post_hook = "bash ~/.config/matugen/post-hook-scripts/gtk-themes-reload.sh"
 
+[templates.minos]
+input_path = "~/.dotfiles/config/matugen/templates/minos.json"
+output_path = "~/.config/minos/config.json"
+
 [templates.niri]
 input_path = "~/.dotfiles/config/matugen/templates/niri.kdl"
 output_path = "~/.cache/matugen/niri.kdl"

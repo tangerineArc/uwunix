@@ -2,7 +2,7 @@ daemonize
 ignore-empty-password
 show-failed-attempts
 
-image=~/.dotfiles/assets/wallpapers/mitsuri.png
+image=~/.dotfiles/assets/tux-mountain.png
 font="JetBrainsMono Nerd Font"
 
 indicator-radius=240
