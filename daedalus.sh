@@ -8,15 +8,21 @@ read -p "[daedalus] enter hostname: " HOSTNAME
 read -p "[daedalus] enter full name for Git: " GIT_NAME
 read -p "[daedalus] enter email for Git: " GIT_EMAIL
 
+echo "[daedalus] generating hardware-configuration.nix..."
+nixos-generate-config --root /mnt
+cp /mnt/etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+
+echo "[daedalus] extracting native stateVersion from ISO..."
+STATE_VERSION=$(awk -F'"' '/system\.stateVersion[[:space:]]*=[[:space:]]*"/ {print $2}' /mnt/etc/nixos/configuration.nix)
+
+echo "[daedalus] patching flake variables..."
 sed -i "s/user = \"[^\"]*\"/user = \"$USERNAME\"/" flake.nix
 sed -i "s/host = \"[^\"]*\"/host = \"$HOSTNAME\"/" flake.nix
 sed -i "s/gitName = \"[^\"]*\"/gitName = \"$GIT_NAME\"/" flake.nix
 sed -i "s/gitEmail = \"[^\"]*\"/gitEmail = \"$GIT_EMAIL\"/" flake.nix
-echo "[daedalus] updated flake.nix with User: $USERNAME, Host: $HOSTNAME and Git profile"
+sed -i "s/stateVersion = \"[^\"]*\"/stateVersion = \"$STATE_VERSION\"/" flake.nix
 
-echo "[daedalus] generating hardware-configuration.nix..."
-nixos-generate-config --root /mnt
-cp /mnt/etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+echo "[daedalus] updated flake.nix with User: $USERNAME, Host: $HOSTNAME, Version: $STATE_VERSION"
 
 echo "[daedalus] copying dotfiles to permanent storage..."
 TARGET_DIR="/mnt/home/$USERNAME/.dotfiles"

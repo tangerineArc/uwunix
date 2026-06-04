@@ -84,10 +84,10 @@ binds {
     }
     // -- Manage session --
     Mod+Alt+L hotkey-overlay-title="Lock Session" {
-        spawn "swaylock"
+        spawn "hyprlock"
     }
     Mod+Alt+S hotkey-overlay-title="Suspend Session" {
-        spawn "sh" "-c" "swaylock && systemctl suspend"
+        spawn "sh" "-c" "hyprlock && systemctl suspend"
     }
     Mod+Alt+E {
         quit

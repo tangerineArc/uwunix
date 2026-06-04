@@ -31,6 +31,7 @@
     host = "labyrinth";
     gitName = "Swagatam Pati";
     gitEmail = "swagatam.pati.2104@gmail.com";
+    stateVersion = "25.11";
     # --- --- --- --- --- --- --- ---
 
     system = "x86_64-linux";
@@ -43,7 +44,7 @@
       "${host}" = nixpkgs.lib.nixosSystem {
         inherit system;
 
-        specialArgs = {inherit user host;};
+        specialArgs = {inherit user host stateVersion;};
 
         modules = [
           ./configuration.nix
@@ -56,7 +57,7 @@
       "${user}@${host}" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        extraSpecialArgs = {inherit inputs user host gitName gitEmail;};
+        extraSpecialArgs = {inherit inputs user host gitName gitEmail stateVersion;};
 
         modules = [
           ./home.nix

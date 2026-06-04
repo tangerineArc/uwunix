@@ -6,6 +6,7 @@
   user,
   gitName,
   gitEmail,
+  stateVersion,
   ...
 }: {
   nixpkgs.config.allowUnfree = true;
@@ -34,9 +35,7 @@
 
   home = {
     homeDirectory = "/home/${user}";
-    # This value determines the Home Manager release that your
-    # configuration is compatible with. Match it with your system.
-    stateVersion = "25.11";
+    stateVersion = stateVersion;
     username = user;
 
     activation = {
@@ -65,6 +64,7 @@
 
       pkgs.adwaita-icon-theme
       pkgs.adw-gtk3 # dependency
+      pkgs.ani-cli
       pkgs.awww
       pkgs.bluetui
       pkgs.brightnessctl
@@ -79,6 +79,7 @@
       pkgs.imv
       pkgs.lsd
       pkgs.matugen
+      pkgs.nautilus
       pkgs.neovim
       pkgs.nodejs
       pkgs.pkg-config # dependency
@@ -129,6 +130,7 @@
 
   programs = {
     home-manager.enable = true;
+    hyprlock.enable = true;
 
     btop = {
       enable = true;
@@ -222,15 +224,6 @@
       };
     };
 
-    swaylock = {
-      enable = true;
-
-      # settings = {
-      #   font = "JetBrainsMono Nerd Font";
-      #   indicator-idle-visible = true;
-      # };
-    };
-
     yazi = {
       enable = true;
       enableZshIntegration = true;
@@ -295,12 +288,12 @@
 
     swayidle = {
       enable = true;
-      events.before-sleep = "${pkgs.swaylock}/bin/swaylock -f";
+      events.before-sleep = "${pkgs.hyprlock}/bin/hyprlock";
 
       timeouts = [
         {
-          command = "${pkgs.swaylock}/bin/swaylock -f";
-          timeout = 300; # 300s = 5 minutes
+          command = "${pkgs.hyprlock}/bin/hyprlock";
+          timeout = 540; # 540s = 9 minutes
         }
         {
           command = "${pkgs.systemd}/bin/systemctl suspend";
@@ -355,6 +348,9 @@
         @import 'colors.css';
       '';
 
+      # Hyprlock config
+      "hypr/hyprlock.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock.conf";
+
       # Matugen config
       "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/matugen";
 
@@ -363,9 +359,6 @@
 
       # Niri config
       "niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri";
-
-      # Swaylock config
-      "swaylock/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.swaylock";
 
       # Yazi config
       "yazi/yazi.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/yazi.toml";
