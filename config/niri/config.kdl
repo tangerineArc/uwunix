@@ -90,7 +90,7 @@ binds {
         spawn "hyprlock"
     }
     Mod+Alt+S hotkey-overlay-title="Suspend Session" {
-        spawn "sh" "-c" "hyprlock && systemctl suspend"
+        spawn "systemctl" "suspend"
     }
     Mod+Alt+E {
         quit

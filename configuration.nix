@@ -29,10 +29,12 @@ in {
   time.timeZone = "Asia/Kolkata";
   system.stateVersion = stateVersion; # Never change this
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-    systemd-boot.enable = true;
+  boot = {
+    # Use the systemd-boot EFI boot loader.
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
   };
 
   # console = {

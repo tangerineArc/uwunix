@@ -293,7 +293,7 @@
 
     swayidle = {
       enable = true;
-      events.before-sleep = "${pkgs.hyprlock}/bin/hyprlock";
+      events.before-sleep = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
 
       timeouts = [
         {
@@ -354,7 +354,7 @@
       '';
 
       # Hyprlock config
-      "hypr/hyprlock.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock.conf";
+      "hypr".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock";
 
       # Matugen config
       "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/matugen";
