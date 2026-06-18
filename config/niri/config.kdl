@@ -87,7 +87,7 @@ binds {
     }
     // -- Manage session --
     Mod+Alt+L hotkey-overlay-title="Lock Session" {
-        spawn "hyprlock"
+        spawn "loginctl" "lock-session"
     }
     Mod+Alt+S hotkey-overlay-title="Suspend Session" {
         spawn "systemctl" "suspend"

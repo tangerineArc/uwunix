@@ -2,7 +2,6 @@
 
 hour=$(date +%H)
 
-# Determine the greeting based on the time
 if [ "$hour" -ge 5 ] && [ "$hour" -lt 12 ]; then
   greeting="Good Morning :)"
 elif [ "$hour" -ge 12 ] && [ "$hour" -lt 17 ]; then
@@ -15,5 +14,4 @@ else
   greeting="GO TO SLEEP!"
 fi
 
-# Output the combined text
 echo -e "Hello, $USER! $greeting"

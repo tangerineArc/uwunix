@@ -270,6 +270,27 @@
     minos.enable = true;
     playerctld.enable = true;
 
+    hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          lock_cmd = "env PATH=/run/current-system/sw/bin:/etc/profiles/per-user/${user}/bin:$PATH ${pkgs.hyprlock}/bin/hyprlock";
+          before_sleep_cmd = "loginctl lock-session";
+        };
+
+        listener = [
+          {
+            timeout = 540; # 9 minutes
+            on-timeout = "loginctl lock-session";
+          }
+          {
+            timeout = 600; # 10 minutes
+            on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
+          }
+        ];
+      };
+    };
+
     mako = {
       enable = true;
 
@@ -289,22 +310,6 @@
         text-color = "#ebdbb2ff";
         width = 400;
       };
-    };
-
-    swayidle = {
-      enable = true;
-      events.before-sleep = "pidof hyprlock || ${pkgs.hyprlock}/bin/hyprlock";
-
-      timeouts = [
-        {
-          command = "${pkgs.hyprlock}/bin/hyprlock";
-          timeout = 540; # 540s = 9 minutes
-        }
-        {
-          command = "${pkgs.systemd}/bin/systemctl suspend";
-          timeout = 600; # 600s = 10 minutes
-        }
-      ];
     };
   };
 
@@ -354,7 +359,7 @@
       '';
 
       # Hyprlock config
-      "hypr".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock";
+      "hypr/hyprlock.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock/hyprlock.conf";
 
       # Matugen config
       "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/matugen";
