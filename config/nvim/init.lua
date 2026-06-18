@@ -500,9 +500,9 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        -- clangd = {},
         -- gopls = {},
         bashls = {},
+        clangd = {},
         cssls = {},
         nil_ls = {},
         pyright = {},
@@ -593,6 +593,7 @@ require('lazy').setup({
       format_on_save = function(bufnr)
         -- You can specify filetypes to autoformat on save here:
         local enabled_filetypes = {
+          c = true,
           css = true,
           json = true,
           jsonc = true,
@@ -619,6 +620,7 @@ require('lazy').setup({
       },
       -- You can also specify external formatters in here.
       formatters_by_ft = {
+        c = { 'clang-format' },
         css = { 'prettier' },
         json = { 'prettier' },
         jsonc = { 'prettier' },

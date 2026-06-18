@@ -75,8 +75,10 @@
       pkgs.gcc
       pkgs.ghostty
       pkgs.glib # dependency
+      pkgs.glibc.dev # dependency
       pkgs.gnumake
       pkgs.imv
+      pkgs.jq
       pkgs.lsd
       pkgs.matugen
       pkgs.nautilus
@@ -123,6 +125,8 @@
     };
 
     sessionVariables = {
+      C_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
+      CPLUS_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
@@ -199,6 +203,7 @@
       settings = {
         add_newline = false;
         format = "$all$line_break$time$character";
+        deno.symbol = " ";
         git_branch.symbol = " ";
         lua.symbol = " ";
         nix_shell.symbol = " ";

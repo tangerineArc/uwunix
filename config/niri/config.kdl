@@ -9,8 +9,8 @@ spawn-at-startup "wl-gammarelay-rs"
 // -- Keybinds --
 binds {
     // -- Spawn applications --
-    Mod+B hotkey-overlay-title="Chromium: Web Browser" {
-        spawn "chromium"
+    Mod+B hotkey-overlay-title="Zen: Web Browser" {
+        spawn "zen"
     }
     Mod+E hotkey-overlay-title="Yazi: File Explorer" {
         spawn "ghostty" "-e" "yazi"
@@ -31,6 +31,9 @@ binds {
         spawn "fuzzel"
     }
     // -- Misc --
+    Mod+A hotkey-overlay-title="Minos: Control Center" {
+        spawn "minos" "ipc" "call" "controlcenter" "toggle"
+    }
     Mod+F hotkey-overlay-title="Maximize Focused Window" {
         fullscreen-window
     }
@@ -141,6 +144,7 @@ input {
 }
 // -- Application-specific layer rules --
 layer-rule {
+    exclude namespace="^minos-space-reserver$"
     exclude namespace="^notifications$"
     background-effect {
         blur true
@@ -152,12 +156,19 @@ layer-rule {
 }
 layer-rule {
     match namespace="^launcher$"
-    match namespace="minos"
     geometry-corner-radius 20
 }
 layer-rule {
-    match namespace="minos-bar"
-    geometry-corner-radius 40
+    match namespace="^minos-clock$"
+    match namespace="^minos-control-center$"
+    match namespace="^minos-controls-trigger$"
+    match namespace="^minos-focused-window-title$"
+    match namespace="^minos-power-popup$"
+    match namespace="^minos-power-trigger$"
+    match namespace="^minos-media-player$"
+    match namespace="^minos-system-tray$"
+    match namespace="^minos-workspace-switcher$"
+    geometry-corner-radius 14
 }
 // -- Window layout rules --
 layout {
@@ -208,6 +219,7 @@ window-rule {
     exclude app-id="org.gnome.Snapshot"
     exclude app-id="chromium" title="Crunchyroll"
     exclude app-id="chromium" title="YouTube"
+    // exclude app-id="chromium" title="tanarc"
     exclude app-id="zed"
     exclude title="Crunchyroll"
     exclude title="YouTube"

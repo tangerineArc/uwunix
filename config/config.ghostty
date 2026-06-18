@@ -1,4 +1,4 @@
-theme = "/home/tangerine/.cache/matugen/colors.ghostty"
+theme = /home/tangerine/.cache/matugen/colors.ghostty
 
 adjust-cell-height = 10%
 mouse-hide-while-typing = true

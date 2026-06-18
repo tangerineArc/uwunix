@@ -8,12 +8,12 @@
   ...
 }: let
   labyrinth-sddm = pkgs.stdenv.mkDerivation {
-    name = "nier-automata-sddm";
+    name = "material-you-sddm";
     src = ./config/sddm;
 
     installPhase = ''
-      mkdir -p $out/share/sddm/themes/nier-automata-sddm
-      cp -r * $out/share/sddm/themes/nier-automata-sddm/
+      mkdir -p $out/share/sddm/themes/material-you-sddm
+      cp -r * $out/share/sddm/themes/material-you-sddm/
     '';
   };
 in {
@@ -107,13 +107,14 @@ in {
     power-profiles-daemon.enable = true;
     printing.enable = true; # Enable CUPS to print documents.
     udisks2.enable = true;
+    upower.enable = true;
 
     displayManager.sddm = {
       enable = true;
-      theme = "nier-automata-sddm";
+      theme = "material-you-sddm";
+
       extraPackages = [
         pkgs.qt6.qt5compat # dependency
-        pkgs.qt6.qtmultimedia # dependency
       ];
     };
 

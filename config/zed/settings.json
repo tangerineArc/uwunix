@@ -35,6 +35,9 @@
     "dark": "Colored Zed Icons Theme Dark"
   },
   "languages": {
+    "QML": {
+      "tab_size": 4
+    },
     "SCSS": {
       "prettier": {
         "allowed": true
@@ -57,7 +60,12 @@
       "code_actions_on_format": {
         "source.organizeImports": true,
         "source.sortImports": true
-      }
+      },
+      "language_servers": [
+        "deno",
+        "!vtsls",
+        "!typescript-language-server"
+      ]
     },
     "TSX": {
       "prettier": {
