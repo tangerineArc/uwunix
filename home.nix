@@ -77,6 +77,7 @@
       pkgs.glib # dependency
       pkgs.glibc.dev # dependency
       pkgs.gnumake
+      pkgs.hyprlock
       pkgs.imv
       pkgs.jq
       pkgs.lsd
@@ -84,6 +85,7 @@
       pkgs.nautilus
       pkgs.neovim
       pkgs.nodejs
+      pkgs.opencode
       pkgs.pkg-config # dependency
       pkgs.playerctl
       pkgs.polkit_gnome
@@ -134,7 +136,6 @@
 
   programs = {
     home-manager.enable = true;
-    hyprlock.enable = true;
 
     btop = {
       enable = true;

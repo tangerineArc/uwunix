@@ -14,6 +14,11 @@
       url = "github:tangerineArc/minos";
     };
 
+    opencode = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:dan-online/opencode-nix";
+    };
+
     zen-browser = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:youwen5/zen-browser-flake";
@@ -24,6 +29,7 @@
     self,
     nixpkgs,
     home-manager,
+    opencode,
     ...
   } @ inputs: let
     # --- CONFIGURATION VARIABLES ---
@@ -38,6 +44,8 @@
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
+
+      overlays = [opencode.overlays.default];
     };
   in {
     nixosConfigurations = {
