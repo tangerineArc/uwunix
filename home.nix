@@ -156,8 +156,6 @@
       ];
 
       extensions = [
-        # Base16 Everything
-        {id = "jmofeafhkeohbpbedgbnkdlfaomjbnkf";}
         # uBlock Origin Lite
         {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";}
       ];

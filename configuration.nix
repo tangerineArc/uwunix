@@ -46,6 +46,7 @@ in {
   # List packages installed in system profile.
   environment.systemPackages = [
     labyrinth-sddm
+    pkgs.git
     pkgs.unzip
     pkgs.vim
     pkgs.wget
@@ -129,34 +130,30 @@ in {
       enable = true;
       hwRender = true;
 
-      extraConfig = ''
-        palette=custom
-        palette-background=29,32,33
-        palette-foreground=235,219,178
-        palette-black=29,32,33
-        palette-red=204,36,29
-        palette-green=152,151,26
-        palette-yellow=215,153,33
-        palette-blue=69,133,136
-        palette-magenta=177,98,134
-        palette-cyan=104,157,106
-        palette-light-grey=168,153,132
-        palette-dark-grey=146,131,116
-        palette-light-red=251,73,52
-        palette-light-green=184,187,38
-        palette-light-yellow=250,189,47
-        palette-light-blue=131,165,152
-        palette-light-magenta=211,134,155
-        palette-light-cyan=142,192,124
-        palette-white=235,219,178
-      '';
+      config = {
+        font-name = "JetBrainsMono Nerd Font";
+        hwaccel = true;
 
-      fonts = [
-        {
-          name = "JetBrainsMono Nerd Font";
-          package = pkgs.nerd-fonts.jetbrains-mono;
-        }
-      ];
+        palette = "custom";
+        palette-background = "29,32,33";
+        palette-foreground = "235,219,178";
+        palette-black = "29,32,33";
+        palette-red = "204,36,29";
+        palette-green = "152,151,26";
+        palette-yellow = "215,153,33";
+        palette-blue = "69,133,136";
+        palette-magenta = "177,98,134";
+        palette-cyan = "104,157,106";
+        palette-light-grey = "168,153,132";
+        palette-dark-grey = "146,131,116";
+        palette-light-red = "251,73,52";
+        palette-light-green = "184,187,38";
+        palette-light-yellow = "250,189,47";
+        palette-light-blue = "131,165,152";
+        palette-light-magenta = "211,134,155";
+        palette-light-cyan = "142,192,124";
+        palette-white = "235,219,178";
+      };
     };
 
     # Enable touchpad support.
@@ -189,7 +186,7 @@ in {
   ];
 
   users.users.${user} = {
-    description = "Primary User";
+    description = "Maester";
     extraGroups = ["wheel"];
     home = "/home/${user}";
     isNormalUser = true;
