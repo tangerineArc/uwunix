@@ -506,7 +506,6 @@ require('lazy').setup({
         cssls = {},
         nil_ls = {},
         pyright = {},
-        rust_analyzer = {},
         stylua = {},
         taplo = {},
         ts_ls = {},
@@ -568,9 +567,12 @@ require('lazy').setup({
         vim.lsp.enable(name)
       end
 
-      -- Manually configure and enable qmlls natively to bypass Mason
+      -- Manually configure and enable LSPs natively to bypass Mason
       vim.lsp.config('qmlls', {})
       vim.lsp.enable 'qmlls'
+
+      vim.lsp.config('rust_analyzer', {})
+      vim.lsp.enable 'rust_analyzer'
     end,
   },
 

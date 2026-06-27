@@ -86,8 +86,16 @@ in {
 
   programs = {
     niri.enable = true;
-    nix-ld.enable = true;
     zsh.enable = true;
+
+    nix-ld = {
+      enable = true;
+
+      libraries = [
+        pkgs.stdenv.cc.cc
+        pkgs.zlib
+      ];
+    };
 
     # Some programs need SUID wrappers, can be configured further or are
     # started in user sessions.

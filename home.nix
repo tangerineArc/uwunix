@@ -39,11 +39,6 @@
     username = user;
 
     activation = {
-      installRust = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        ${pkgs.rustup}/bin/rustup default stable
-        ${pkgs.rustup}/bin/rustup component add rust-analyzer
-      '';
-
       setupDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
         mkdir -p "$HOME/Devel/"
         mkdir -p "$HOME/Documents/"
@@ -69,7 +64,7 @@
       pkgs.bluetui
       pkgs.brightnessctl
       pkgs.fastfetch
-      pkgs.fd # dependency
+      pkgs.fd # required by nvim telescope
       pkgs.ffmpeg
       pkgs.fuzzel
       pkgs.gcc
@@ -93,14 +88,19 @@
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
       pkgs.ripgrep # dependency
-      pkgs.rustup
       pkgs.smile
       pkgs.snapshot
       pkgs.tree-sitter # dependency
       pkgs.wl-clipboard
       pkgs.wl-gammarelay-rs
       pkgs.zed-editor
-      pkgs.zoxide # dependency
+
+      # -- Rust toolchain --
+      pkgs.cargo
+      pkgs.clippy
+      pkgs.rustc
+      pkgs.rustfmt
+      pkgs.rust-analyzer
 
       (pkgs.writeShellScriptBin
         "fresco"
@@ -226,12 +226,6 @@
           style = "bold yellow";
         };
       };
-    };
-
-    yazi = {
-      enable = true;
-      enableZshIntegration = true;
-      shellWrapperName = "y";
     };
 
     zsh = {
@@ -369,9 +363,6 @@
       # Niri config
       "niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri";
 
-      # Yazi config
-      "yazi/yazi.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/yazi.toml";
-
       # Zed config
       "zed".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/zed";
     };
@@ -399,14 +390,6 @@
         icon = "whatsapp";
         name = "WhatsApp Web";
         terminal = false;
-      };
-
-      yazi = {
-        categories = ["System" "FileTools" "FileManager" "ConsoleOnly"];
-        exec = "yazi %u";
-        icon = "system-file-manager";
-        name = "Yazi";
-        terminal = true;
       };
 
       youtube = {
