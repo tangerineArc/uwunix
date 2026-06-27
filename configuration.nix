@@ -128,7 +128,6 @@ in {
 
     kmscon = {
       enable = true;
-      hwRender = true;
 
       config = {
         font-name = "JetBrainsMono Nerd Font";
