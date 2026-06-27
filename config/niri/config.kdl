@@ -76,6 +76,7 @@ binds {
     Mod+Shift+L {
         move-column-right
     }
+    // idk why this is needed
     Mod+Shift+R hotkey-overlay-title="Set Focused Window Width to 50%" {
         set-column-width "50%"
     }

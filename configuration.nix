@@ -99,12 +99,33 @@ in {
   };
 
   security = {
-    pam.services.hyprlock = {};
     polkit.enable = true;
+
+    pam.services = {
+      hyprlock = {};
+      login.fprintAuth = true;
+      polkit-1.fprintAuth = true;
+      sudo.fprintAuth = true;
+
+      sddm = {
+        fprintAuth = false;
+
+        text = ''
+          account include login
+          auth optional pam_unix.so likeauth nullok
+          auth optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so
+          auth sufficient pam_unix.so likeauth nullok try_first_pass
+          auth required pam_deny.so
+          password include login
+          session include login
+        '';
+      };
+    };
   };
 
   services = {
     cloudflare-warp.enable = true;
+    fprintd.enable = true;
     gvfs.enable = true;
     # openssh.enable = true; # Enable the OpenSSH daemon.
     power-profiles-daemon.enable = true;
@@ -186,7 +207,7 @@ in {
 
   users.users.${user} = {
     description = "Maester";
-    extraGroups = ["wheel"];
+    extraGroups = ["wheel" "input"];
     home = "/home/${user}";
     isNormalUser = true;
     shell = pkgs.zsh;
