@@ -10,7 +10,7 @@ spawn-at-startup "wl-gammarelay-rs"
 binds {
     // -- Spawn applications --
     Mod+B hotkey-overlay-title="Zen: Web Browser" {
-        spawn "zen"
+        spawn "zen-beta"
     }
     Mod+E hotkey-overlay-title="Nautilus: File Explorer" {
         spawn "nautilus"

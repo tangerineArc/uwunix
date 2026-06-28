@@ -13,6 +13,7 @@
 
   imports = [
     inputs.minos.homeManagerModules.default
+    inputs.zen-browser.homeModules.beta
   ];
 
   dconf = {
@@ -55,8 +56,6 @@
     };
 
     packages = [
-      inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
-
       pkgs.adwaita-icon-theme
       pkgs.adw-gtk3 # dependency
       pkgs.ani-cli
@@ -102,6 +101,7 @@
       pkgs.rustfmt
       pkgs.rust-analyzer
 
+      # -- Scripts --
       (pkgs.writeShellScriptBin
         "fresco"
         ''
@@ -226,6 +226,11 @@
           style = "bold yellow";
         };
       };
+    };
+
+    zen-browser = {
+      enable = true;
+      setAsDefaultBrowser = true;
     };
 
     zsh = {
@@ -405,14 +410,6 @@
         exec = "chromium --app=https://music.youtube.com %U";
         icon = "youtube-music";
         name = "YouTube Music";
-        terminal = false;
-      };
-
-      zen = {
-        categories = ["Network" "WebBrowser"];
-        exec = "zen %U";
-        icon = "zen-browser";
-        name = "Zen Browser";
         terminal = false;
       };
     };
