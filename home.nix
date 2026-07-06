@@ -8,7 +8,13 @@
   gitEmail,
   stateVersion,
   ...
-}: {
+}: let
+  rustup-no-ra = pkgs.symlinkJoin {
+    name = "rustup-no-ra";
+    paths = [pkgs.rustup];
+    postBuild = ''rm "$out/bin/rust-analyzer"'';
+  };
+in {
   nixpkgs.config.allowUnfree = true;
 
   imports = [
@@ -53,6 +59,15 @@
           ln -sf "$HOME/.dotfiles/assets/nixos-dark.png" "$HOME/.cache/current-wallpaper"
         fi
       '';
+
+      setupRust = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        if ! [ -f "$HOME/.rustup/settings.toml" ]; then
+          ${rustup-no-ra}/bin/rustup default stable
+          ${rustup-no-ra}/bin/rustup toolchain install nightly
+          ${rustup-no-ra}/bin/rustup component add rust-analyzer
+          ${rustup-no-ra}/bin/rustup component add rust-analyzer --toolchain nightly
+        fi
+      '';
     };
 
     packages = [
@@ -87,19 +102,14 @@
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
       pkgs.ripgrep # dependency
+      rustup-no-ra
+      pkgs.rust-analyzer
       pkgs.smile
       pkgs.snapshot
       pkgs.tree-sitter # dependency
       pkgs.wl-clipboard
       pkgs.wl-gammarelay-rs
       pkgs.zed-editor
-
-      # -- Rust toolchain --
-      pkgs.cargo
-      pkgs.clippy
-      pkgs.rustc
-      pkgs.rustfmt
-      pkgs.rust-analyzer
 
       # -- Scripts --
       (pkgs.writeShellScriptBin
@@ -131,6 +141,7 @@
       CPLUS_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
       EDITOR = "nvim";
       VISUAL = "nvim";
+      PATH = "$HOME/.cargo/bin:$PATH";
     };
   };
 
