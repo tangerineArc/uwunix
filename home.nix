@@ -9,6 +9,32 @@
   stateVersion,
   ...
 }: let
+  antigravity-cli = pkgs.stdenv.mkDerivation rec {
+    pname = "antigravity-cli";
+    sourceRoot = ".";
+    version = "1.1.3";
+
+    buildInputs = [
+      pkgs.stdenv.cc.cc.lib
+      pkgs.zlib
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp antigravity $out/bin/agy
+      chmod +x $out/bin/agy
+    '';
+
+    nativeBuildInputs = [
+      pkgs.autoPatchelfHook
+    ];
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/google-antigravity/antigravity-cli/releases/download/${version}/agy_cli_linux_x64.tar.gz";
+      hash = "sha256-enI5pptl08869+dfJ7L/TpzOaWp7mp5cN8aV8cdO7DQ=";
+    };
+  };
+
   rustup-no-ra = pkgs.symlinkJoin {
     name = "rustup-no-ra";
     paths = [pkgs.rustup];
@@ -71,6 +97,9 @@ in {
     };
 
     packages = [
+      antigravity-cli
+      rustup-no-ra
+
       pkgs.adwaita-icon-theme
       pkgs.adw-gtk3 # dependency
       pkgs.ani-cli
@@ -102,7 +131,6 @@ in {
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
       pkgs.ripgrep # dependency
-      rustup-no-ra
       pkgs.rust-analyzer
       pkgs.smile
       pkgs.snapshot

@@ -240,6 +240,17 @@ window-rule {
         fixed 490
     }
 }
+// -- TEMPORARY --
+window-rule {
+    match title="^Icicle$"
+    open-floating true
+    default-column-width {
+        fixed 900
+    }
+    default-window-height {
+        fixed 800
+    }
+}
 window-rule {
     match app-id="zed" title="Settings"
     open-floating true

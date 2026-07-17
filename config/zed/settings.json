@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "cli_default_open_behavior": "new_window",
   "agent": {
     "inline_assistant_model": {
       "provider": "zed.dev",
@@ -80,7 +81,7 @@
       "tab_size": 4
     }
   },
-  "disable_ai": false,
+  "disable_ai": true,
   "tabs": {
     "show_close_button": "hover",
     "show_diagnostics": "all",

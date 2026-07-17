@@ -50,6 +50,7 @@ in {
     pkgs.unzip
     pkgs.vim
     pkgs.wget
+    pkgs.xwayland-satellite
   ];
 
   fonts = {
@@ -97,13 +98,11 @@ in {
       ];
     };
 
-    # Some programs need SUID wrappers, can be configured further or are
-    # started in user sessions.
-    # mtr.enable = true;
-    # gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    };
   };
 
   security = {
