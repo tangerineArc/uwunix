@@ -145,12 +145,20 @@ input {
 }
 // -- Application-specific layer rules --
 layer-rule {
+    exclude namespace="^minos2$"
     exclude namespace="^minos-space-reserver$"
     exclude namespace="^notifications$"
     background-effect {
         blur true
         xray false
     }
+    shadow {
+        on
+    }
+}
+layer-rule {
+    match namespace="^minos2$"
+    geometry-corner-radius 8
     shadow {
         on
     }
@@ -176,7 +184,7 @@ layout {
     always-center-single-column
     gaps 8
     border {
-        width 6
+        width 2
     }
     default-column-width {
         proportion 0.8
@@ -200,14 +208,14 @@ output "eDP-1" {
 // -- Window switcher settings --
 recent-windows {
     highlight {
-        corner-radius 10
+        corner-radius 6
     }
 }
 // -- Global window rules --
 window-rule {
     clip-to-geometry true
     draw-border-with-background false
-    geometry-corner-radius 10
+    geometry-corner-radius 6
     background-effect {
         blur true
         xray true

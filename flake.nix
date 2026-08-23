@@ -14,9 +14,9 @@
       url = "github:tangerineArc/minos";
     };
 
-    opencode = {
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:dan-online/opencode-nix";
     };
 
     zen-browser = {
@@ -29,7 +29,7 @@
     self,
     nixpkgs,
     home-manager,
-    opencode,
+    rust-overlay,
     ...
   } @ inputs: let
     # --- CONFIGURATION VARIABLES ---
@@ -45,7 +45,7 @@
       inherit system;
       config.allowUnfree = true;
 
-      overlays = [opencode.overlays.default];
+      overlays = [(import rust-overlay)];
     };
   in {
     nixosConfigurations = {

@@ -16,6 +16,21 @@
       cp -r * $out/share/sddm/themes/material-you-sddm/
     '';
   };
+
+  google-sans-flex = pkgs.stdenv.mkDerivation {
+    dontUnpack = true;
+    pname = "google-sans-flex";
+    version = "3.007";
+
+    installPhase = ''
+      install -Dm644 "$src" $out/share/fonts/truetype/GoogleSansFlex-Regular.ttf
+    '';
+
+    src = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/LineageOS/android_external_google-fonts_google-sans-flex/d4acee846603/GoogleSansFlex-Regular.ttf";
+      hash = "sha256-JRCot6JL6x/oFj6aSYE8z+lrVFNES5RD1CZlyk+jIMk=";
+    };
+  };
 in {
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = true;
@@ -26,8 +41,9 @@ in {
 
   i18n.defaultLocale = "en_US.UTF-8";
   location.provider = "geoclue2";
-  time.timeZone = "Asia/Kolkata";
   system.stateVersion = stateVersion; # Never change this
+  time.timeZone = "Asia/Kolkata";
+  virtualisation.docker.enable = true;
 
   boot = {
     # Use the systemd-boot EFI boot loader.
@@ -57,6 +73,7 @@ in {
     fontconfig.enable = true;
 
     packages = [
+      google-sans-flex
       pkgs.nerd-fonts.jetbrains-mono
     ];
   };
@@ -64,6 +81,8 @@ in {
   hardware = {
     bluetooth.enable = true;
     graphics.enable = true;
+    steam-hardware.enable = true;
+    xpadneo.enable = true;
   };
 
   networking = {
@@ -208,13 +227,13 @@ in {
   swapDevices = [
     {
       device = "/var/lib/swapfile";
-      size = 8 * 1024;
+      size = 16 * 1024;
     }
   ];
 
   users.users.${user} = {
     description = "Maester";
-    extraGroups = ["wheel" "input"];
+    extraGroups = ["docker" "input" "wheel"];
     home = "/home/${user}";
     isNormalUser = true;
     shell = pkgs.zsh;

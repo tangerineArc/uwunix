@@ -35,14 +35,18 @@
     "light": "Colored Zed Icons Theme Dark",
     "dark": "Colored Zed Icons Theme Dark"
   },
+  "lsp": {
+    "deno": {
+      "settings": {
+        "deno": {
+          "enable": true
+        }
+      }
+    }
+  },
   "languages": {
     "QML": {
       "tab_size": 4
-    },
-    "SCSS": {
-      "prettier": {
-        "allowed": true
-      }
     },
     "JavaScript": {
       "prettier": {
@@ -55,9 +59,6 @@
       }
     },
     "TypeScript": {
-      "prettier": {
-        "allowed": true
-      },
       "code_actions_on_format": {
         "source.organizeImports": true,
         "source.sortImports": true
@@ -66,7 +67,8 @@
         "deno",
         "!vtsls",
         "!typescript-language-server"
-      ]
+      ],
+      "formatter": "language_server"
     },
     "TSX": {
       "prettier": {

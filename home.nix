@@ -34,12 +34,6 @@
       hash = "sha256-enI5pptl08869+dfJ7L/TpzOaWp7mp5cN8aV8cdO7DQ=";
     };
   };
-
-  rustup-no-ra = pkgs.symlinkJoin {
-    name = "rustup-no-ra";
-    paths = [pkgs.rustup];
-    postBuild = ''rm "$out/bin/rust-analyzer"'';
-  };
 in {
   nixpkgs.config.allowUnfree = true;
 
@@ -85,20 +79,10 @@ in {
           ln -sf "$HOME/.dotfiles/assets/nixos-dark.png" "$HOME/.cache/current-wallpaper"
         fi
       '';
-
-      setupRust = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        if ! [ -f "$HOME/.rustup/settings.toml" ]; then
-          ${rustup-no-ra}/bin/rustup default stable
-          ${rustup-no-ra}/bin/rustup toolchain install nightly
-          ${rustup-no-ra}/bin/rustup component add rust-analyzer
-          ${rustup-no-ra}/bin/rustup component add rust-analyzer --toolchain nightly
-        fi
-      '';
     };
 
     packages = [
       antigravity-cli
-      rustup-no-ra
 
       pkgs.adwaita-icon-theme
       pkgs.adw-gtk3 # dependency
@@ -131,13 +115,16 @@ in {
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
       pkgs.ripgrep # dependency
-      pkgs.rust-analyzer
       pkgs.smile
       pkgs.snapshot
       pkgs.tree-sitter # dependency
       pkgs.wl-clipboard
       pkgs.wl-gammarelay-rs
       pkgs.zed-editor
+
+      (pkgs.rust-bin.stable.latest.default.override {
+        extensions = ["rust-src" "rust-analyzer"];
+      })
 
       # -- Scripts --
       (pkgs.writeShellScriptBin
@@ -158,6 +145,7 @@ in {
     ];
 
     pointerCursor = {
+      enable = true;
       gtk.enable = true;
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Ice";
@@ -169,7 +157,6 @@ in {
       CPLUS_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
       EDITOR = "nvim";
       VISUAL = "nvim";
-      PATH = "$HOME/.cargo/bin:$PATH";
     };
   };
 
@@ -417,6 +404,14 @@ in {
         exec = "chromium --app=https://crunchyroll.com %U";
         icon = "crunchyroll";
         name = "Crunchyroll";
+        terminal = false;
+      };
+
+      excalidraw = {
+        categories = ["Network"];
+        exec = "chromium --app=https://excalidraw.com %U";
+        icon = "excalidraw";
+        name = "Excalidraw";
         terminal = false;
       };
 
