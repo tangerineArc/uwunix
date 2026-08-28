@@ -96,6 +96,7 @@ in {
       pkgs.fuzzel
       pkgs.gcc
       pkgs.ghostty
+      pkgs.thunderbird
       pkgs.glib # dependency
       pkgs.glibc.dev # dependency
       pkgs.gnumake
@@ -407,19 +408,19 @@ in {
         terminal = false;
       };
 
-      excalidraw = {
-        categories = ["Network"];
-        exec = "chromium --app=https://excalidraw.com %U";
-        icon = "excalidraw";
-        name = "Excalidraw";
-        terminal = false;
-      };
-
       gemini = {
         categories = ["Network" "X-AI"];
         exec = "chromium --app=https://gemini.google.com %U";
         icon = "/home/${user}/.dotfiles/config/icons/google-gemini.svg";
         name = "Google Gemini";
+        terminal = false;
+      };
+
+      teams = {
+        categories = ["Network" "Chat"];
+        exec = "chromium --app=https://teams.cloud.microsoft %U";
+        icon = "teams-for-linux";
+        name = "Microsoft Teams";
         terminal = false;
       };
 
