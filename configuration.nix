@@ -45,6 +45,10 @@ in {
   time.timeZone = "Asia/Kolkata";
   virtualisation.docker.enable = true;
 
+  # Android emulator / device support (KVM already via kvm-amd)
+  users.groups.adbusers = {};
+  users.groups.kvm = {};
+
   boot = {
     # Use the systemd-boot EFI boot loader.
     loader = {
@@ -233,7 +237,7 @@ in {
 
   users.users.${user} = {
     description = "Maester";
-    extraGroups = ["docker" "input" "wheel"];
+    extraGroups = ["adbusers" "docker" "input" "kvm" "wheel"];
     home = "/home/${user}";
     isNormalUser = true;
     shell = pkgs.zsh;

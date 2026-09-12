@@ -97,6 +97,16 @@ in {
       pkgs.gcc
       pkgs.ghostty
       pkgs.thunderbird
+      # -- Android development --
+      pkgs.android-studio
+      pkgs.android-tools
+      pkgs.gradle
+      pkgs.httptoolkit
+      pkgs.kotlin
+      pkgs.kotlin-language-server
+      pkgs.scrcpy
+      # JDK 17 kept available for AGP 7 compatibility via `nix shell nixpkgs#jdk17`
+      # (not added to home.packages to avoid man-page collision with JDK 21)
       pkgs.glib # dependency
       pkgs.glibc.dev # dependency
       pkgs.gnumake
@@ -154,11 +164,22 @@ in {
     };
 
     sessionVariables = {
+      ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
+      ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Android/Sdk";
       C_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
       CPLUS_INCLUDE_PATH = "${pkgs.glibc.dev}/include";
       EDITOR = "nvim";
+      JAVA_HOME = "${pkgs.jdk}/lib/openjdk";
       VISUAL = "nvim";
+      # Work around Java AWT / niri Wayland issues
+      _JAVA_AWT_WM_NONREPARENTING = "1";
     };
+
+    sessionPath = [
+      "${config.home.homeDirectory}/Android/Sdk/emulator"
+      "${config.home.homeDirectory}/Android/Sdk/platform-tools"
+      "${config.home.homeDirectory}/Android/Sdk/cmdline-tools/latest/bin"
+    ];
   };
 
   programs = {
@@ -170,6 +191,11 @@ in {
         color_theme = "matugen";
         theme_background = false;
       };
+    };
+
+    java = {
+      enable = true;
+      package = pkgs.jdk; # JDK 21 (use pkgs.jdk17 for AGP 7 compatibility via direnv)
     };
 
     chromium = {

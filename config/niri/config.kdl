@@ -145,7 +145,6 @@ input {
 }
 // -- Application-specific layer rules --
 layer-rule {
-    exclude namespace="^minos2$"
     exclude namespace="^minos-space-reserver$"
     exclude namespace="^notifications$"
     background-effect {
@@ -155,12 +154,18 @@ layer-rule {
     shadow {
         on
     }
+    popups {
+        background-effect {
+            blur true
+            xray false
+        }
+    }
 }
 layer-rule {
     match namespace="^minos2$"
-    geometry-corner-radius 8
-    shadow {
-        on
+    geometry-corner-radius 10
+    popups {
+        geometry-corner-radius 14
     }
 }
 layer-rule {
@@ -208,14 +213,14 @@ output "eDP-1" {
 // -- Window switcher settings --
 recent-windows {
     highlight {
-        corner-radius 6
+        corner-radius 8
     }
 }
 // -- Global window rules --
 window-rule {
     clip-to-geometry true
     draw-border-with-background false
-    geometry-corner-radius 6
+    geometry-corner-radius 8
     background-effect {
         blur true
         xray true
@@ -228,7 +233,6 @@ window-rule {
     exclude app-id="org.gnome.Snapshot"
     exclude app-id="chromium" title="Crunchyroll"
     exclude app-id="chromium" title="YouTube"
-    // exclude app-id="chromium" title="tanarc"
     exclude app-id="zed"
     exclude title="Crunchyroll"
     exclude title="YouTube"
