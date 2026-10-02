@@ -38,7 +38,7 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   imports = [
-    inputs.minos.homeManagerModules.default
+    inputs.noctalia.homeModules.default
     inputs.zen-browser.homeModules.beta
   ];
 
@@ -79,6 +79,40 @@ in {
           ln -sf "$HOME/.dotfiles/assets/nixos-dark.png" "$HOME/.cache/current-wallpaper"
         fi
       '';
+
+      # niri config includes $XDG_CACHE_HOME/noctalia/niri.kdl, but that file is
+      # only generated once noctalia itself runs (which niri autostarts). A missing
+      # include invalidates the whole niri config, so seed it here to break the cycle.
+      seedNoctaliaCache = lib.hm.dag.entryAfter ["writeBoundary"] ''
+                NOCTALIA_CACHE="$HOME/.cache/noctalia"
+                mkdir -p "$NOCTALIA_CACHE"
+                if [ ! -f "$NOCTALIA_CACHE/niri.kdl" ]; then
+                  if [ -f "$HOME/.cache/matugen/niri.kdl" ]; then
+                    cp "$HOME/.cache/matugen/niri.kdl" "$NOCTALIA_CACHE/niri.kdl"
+                  else
+                    cat > "$NOCTALIA_CACHE/niri.kdl" <<'NIRI_EOF'
+        layout {
+            border {
+                active-color "#7aa2f722"
+                inactive-color "#565f8922"
+                urgent-color "#f7768e22"
+            }
+            insert-hint {
+                color "#7aa2f780"
+            }
+        }
+        overview {
+            backdrop-color "#1a1b26"
+        }
+        recent-windows {
+            highlight {
+                active-color "#394264aa"
+            }
+        }
+        NIRI_EOF
+                  fi
+                fi
+      '';
     };
 
     packages = [
@@ -87,13 +121,11 @@ in {
       pkgs.adwaita-icon-theme
       pkgs.adw-gtk3 # dependency
       pkgs.ani-cli
-      pkgs.awww
       pkgs.bluetui
       pkgs.brightnessctl
       pkgs.fastfetch
       pkgs.fd # required by nvim telescope
       pkgs.ffmpeg
-      pkgs.fuzzel
       pkgs.gcc
       pkgs.ghostty
       pkgs.thunderbird
@@ -110,18 +142,14 @@ in {
       pkgs.glib # dependency
       pkgs.glibc.dev # dependency
       pkgs.gnumake
-      pkgs.hyprlock
       pkgs.imv
       pkgs.jq
       pkgs.lsd
-      pkgs.matugen
       pkgs.nautilus
       pkgs.neovim
       pkgs.nodejs
-      pkgs.opencode
       pkgs.pkg-config # dependency
       pkgs.playerctl
-      pkgs.polkit_gnome
       pkgs.proton-vpn
       pkgs.python3
       pkgs.qt6.qtdeclarative # dependency
@@ -130,7 +158,6 @@ in {
       pkgs.snapshot
       pkgs.tree-sitter # dependency
       pkgs.wl-clipboard
-      pkgs.wl-gammarelay-rs
       pkgs.zed-editor
 
       (pkgs.rust-bin.stable.latest.default.override {
@@ -150,9 +177,15 @@ in {
 
           ln -sf "$IMAGE" ~/.cache/current-wallpaper
 
-          awww img "$IMAGE" --transition-type random
-          matugen image "$IMAGE" -m dark -t scheme-tonal-spot --source-color-index 0
+          noctalia msg wallpaper-set "$IMAGE"
         '')
+
+      (pkgs.writeShellApplication {
+        name = "opencode";
+        text = ''
+          exec ${pkgs.nodejs}/bin/npx @opencode/cli@latest "$@"
+        '';
+      })
     ];
 
     pointerCursor = {
@@ -185,10 +218,15 @@ in {
   programs = {
     home-manager.enable = true;
 
+    noctalia = {
+      enable = true;
+      systemd.enable = false;
+    };
+
     btop = {
       enable = true;
       settings = {
-        color_theme = "matugen";
+        color_theme = "noctalia";
         theme_background = false;
       };
     };
@@ -316,85 +354,10 @@ in {
     };
   };
 
-  services = {
-    cliphist.enable = true;
-    minos.enable = true;
-    playerctld.enable = true;
-
-    hypridle = {
-      enable = true;
-      settings = {
-        general = {
-          lock_cmd = "env PATH=/run/current-system/sw/bin:/etc/profiles/per-user/${user}/bin:$PATH ${pkgs.hyprlock}/bin/hyprlock";
-          before_sleep_cmd = "loginctl lock-session";
-        };
-
-        listener = [
-          {
-            timeout = 540; # 9 minutes
-            on-timeout = "loginctl lock-session";
-          }
-          {
-            timeout = 600; # 10 minutes
-            on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
-          }
-        ];
-      };
-    };
-
-    mako = {
-      enable = true;
-
-      settings = {
-        background-color = "#1d2021ff";
-        border-color = "#83a59822";
-        border-radius = 10;
-        border-size = 6;
-        default-timeout = 5000; # 5000ms = 5s
-        font = "JetBrainsMono Nerd Font 11";
-        height = 500;
-        icon-path = "${config.gtk.iconTheme.package}/share/icons/Papirus-Dark:${pkgs.hicolor-icon-theme}/share/icons/hicolor";
-        layer = "overlay";
-        max-icon-size = 48;
-        on-button-right = "dismiss --no-history";
-        padding = "15,20";
-        text-color = "#ebdbb2ff";
-        width = 400;
-      };
-    };
-  };
-
-  systemd.user.services.polkit-gnome-authentication-agent-1 = {
-    Unit = {
-      Description = "polkit-gnome-authentication-agent-1";
-      Wants = ["graphical-session.target"];
-      After = ["graphical-session.target"];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-      Restart = "on-failure";
-      RestartSec = 1;
-      TimeoutStopSec = 10;
-    };
-    Install = {
-      WantedBy = ["graphical-session.target"];
-    };
-  };
-
   xdg = {
     configFile = {
-      # Btop theme config
-      "btop/themes/matugen.theme".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.cache/matugen/btop.theme";
-
-      # Chromium theme config
-      "chromium-theme/manifest.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.cache/matugen/chromium-theme.json";
-
       # Fastfetch config
       "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/fastfetch/config.jsonc";
-
-      # Fuzzel config
-      "fuzzel/fuzzel.ini".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/fuzzel.ini";
 
       # Ghostty config
       "ghostty/config.ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/config.ghostty";
@@ -409,17 +372,14 @@ in {
         @import 'colors.css';
       '';
 
-      # Hyprlock config
-      "hypr/hyprlock.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/hyprlock/hyprlock.conf";
-
-      # Matugen config
-      "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/matugen";
-
       # Neovim (kickstart.nvim) config
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/nvim";
 
       # Niri config
       "niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/niri";
+
+      # Noctalia config (symlinked so edits hot-reload without a rebuild)
+      "noctalia".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/noctalia";
 
       # Zed config
       "zed".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/zed";

@@ -1,11 +1,15 @@
-include "~/.cache/matugen/niri.kdl"
+include "noctalia.kdl"
+include "~/.cache/noctalia/niri.kdl"
 // -- No client-side decorations --
 prefer-no-csd
+debug {
+    // Allows notification actions and window activation from Noctalia.
+    honor-xdg-activation-with-invalid-serial
+}
 // -- Disable saving screenshots to disk --
 // screenshot-path null
 // -- Startup services --
-spawn-sh-at-startup "awww-daemon & while ! awww query > /dev/null 2>&1; do sleep 0.1; done && awww img ~/.cache/current-wallpaper --transition-type random"
-spawn-at-startup "wl-gammarelay-rs"
+spawn-at-startup "noctalia"
 // -- Keybinds --
 binds {
     // -- Spawn applications --
@@ -15,8 +19,8 @@ binds {
     Mod+E hotkey-overlay-title="Nautilus: File Explorer" {
         spawn "nautilus"
     }
-    Mod+V hotkey-overlay-title="ClipHist: Clipboard Manager" {
-        spawn "sh" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
+    Mod+V hotkey-overlay-title="Noctalia: Clipboard Manager" {
+        spawn-sh "noctalia msg panel-toggle clipboard"
     }
     Mod+Escape hotkey-overlay-title="Bottom: Process Viewer" {
         spawn "ghostty" "-e" "btop"
@@ -27,12 +31,15 @@ binds {
     Mod+Return hotkey-overlay-title="Ghostty: Terminal Emulator" {
         spawn "ghostty"
     }
-    Mod+Space hotkey-overlay-title="Fuzzel: Application Launcher" {
-        spawn "fuzzel"
+    Mod+Space hotkey-overlay-title="Noctalia: Application Launcher" {
+        spawn-sh "noctalia msg panel-toggle launcher"
     }
     // -- Misc --
-    Mod+A hotkey-overlay-title="Minos: Control Center" {
-        spawn "minos" "ipc" "call" "controlcenter" "toggle"
+    Mod+A hotkey-overlay-title="Noctalia: Control Center" {
+        spawn-sh "noctalia msg panel-toggle control-center"
+    }
+    Mod+Comma hotkey-overlay-title="Noctalia: Settings" {
+        spawn-sh "noctalia msg settings-toggle"
     }
     Mod+F hotkey-overlay-title="Maximize Focused Window" {
         fullscreen-window
@@ -88,35 +95,35 @@ binds {
     }
     // -- Manage session --
     Mod+Alt+L hotkey-overlay-title="Lock Session" {
-        spawn "loginctl" "lock-session"
+        spawn-sh "noctalia msg session lock"
     }
-    Mod+Alt+S hotkey-overlay-title="Suspend Session" {
-        spawn "systemctl" "suspend"
+    Mod+Alt+S hotkey-overlay-title="Lock and Suspend" {
+        spawn-sh "noctalia msg session lock-and-suspend"
     }
     Mod+Alt+E {
         quit
     }
     // -- Quick controls --
     Print {
-        screenshot
+        spawn-sh "noctalia msg screenshot-region"
     }
     XF86AudioLowerVolume allow-when-locked=true {
-        spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"
+        spawn-sh "noctalia msg volume-down"
     }
     XF86AudioMute allow-when-locked=true {
-        spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"
+        spawn-sh "noctalia msg volume-mute"
     }
     XF86AudioPlay allow-when-locked=true {
-        spawn "playerctl" "play-pause"
+        spawn-sh "noctalia msg media toggle"
     }
     XF86AudioRaiseVolume allow-when-locked=true {
-        spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "0.05+"
+        spawn-sh "noctalia msg volume-up"
     }
     XF86MonBrightnessUp allow-when-locked=true {
-        spawn "brightnessctl" "set" "10%+"
+        spawn-sh "noctalia msg brightness-up"
     }
     XF86MonBrightnessDown allow-when-locked=true {
-        spawn "brightnessctl" "set" "10%-"
+        spawn-sh "noctalia msg brightness-down"
     }
 }
 // -- Mouse cursor settings
@@ -145,14 +152,10 @@ input {
 }
 // -- Application-specific layer rules --
 layer-rule {
-    exclude namespace="^minos-space-reserver$"
-    exclude namespace="^notifications$"
+    exclude namespace="^noctalia-"
     background-effect {
         blur true
         xray false
-    }
-    shadow {
-        on
     }
     popups {
         background-effect {
@@ -161,35 +164,30 @@ layer-rule {
         }
     }
 }
+// -- Noctalia: blurred overview backdrop (requires [backdrop] enabled in noctalia config) --
 layer-rule {
-    match namespace="^minos2$"
-    geometry-corner-radius 10
-    popups {
-        geometry-corner-radius 14
+    match namespace="^noctalia-backdrop"
+    place-within-backdrop true
+}
+layer-rule {
+    match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+    background-effect {
+        xray false
     }
 }
 layer-rule {
-    match namespace="^launcher$"
-    geometry-corner-radius 20
-}
-layer-rule {
-    match namespace="^minos-clock$"
-    match namespace="^minos-control-center$"
-    match namespace="^minos-controls-trigger$"
-    match namespace="^minos-focused-window-title$"
-    match namespace="^minos-power-popup$"
-    match namespace="^minos-power-trigger$"
-    match namespace="^minos-media-player$"
-    match namespace="^minos-system-tray$"
-    match namespace="^minos-workspace-switcher$"
-    geometry-corner-radius 14
+    match namespace="noctalia-window-switcher"
+    background-effect {
+        blur true
+        xray false
+    }
 }
 // -- Window layout rules --
 layout {
     always-center-single-column
     gaps 8
     border {
-        width 2
+        width 3
     }
     default-column-width {
         proportion 0.8
@@ -220,13 +218,23 @@ recent-windows {
 window-rule {
     clip-to-geometry true
     draw-border-with-background false
-    geometry-corner-radius 8
+    geometry-corner-radius 12
     background-effect {
         blur true
         xray true
     }
 }
 // -- Application-specific window rules --
+window-rule {
+    match app-id="dev.noctalia.Noctalia"
+    open-floating true
+    default-column-width {
+        fixed 1080
+    }
+    default-window-height {
+        fixed 920
+    }
+}
 window-rule {
     exclude app-id="imv"
     exclude app-id="mpv"
@@ -252,17 +260,6 @@ window-rule {
         fixed 490
     }
 }
-// -- TEMPORARY --
-window-rule {
-    match title="^Icicle$"
-    open-floating true
-    default-column-width {
-        fixed 900
-    }
-    default-window-height {
-        fixed 800
-    }
-}
 window-rule {
     match app-id="zed" title="Settings"
     open-floating true
@@ -270,4 +267,3 @@ window-rule {
         xray false
     }
 }
-

@@ -9,9 +9,8 @@
       url = "github:nix-community/home-manager";
     };
 
-    minos = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:tangerineArc/minos";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia/cachix";
     };
 
     rust-overlay = {

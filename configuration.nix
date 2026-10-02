@@ -32,7 +32,13 @@
     };
   };
 in {
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings = {
+    experimental-features = ["nix-command" "flakes"];
+
+    # Prebuilt noctalia binaries (avoids compiling the shell locally).
+    extra-substituters = ["https://noctalia.cachix.org"];
+    extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+  };
   nixpkgs.config.allowUnfree = true;
 
   imports = [
@@ -132,7 +138,6 @@ in {
     polkit.enable = true;
 
     pam.services = {
-      hyprlock = {};
       login.fprintAuth = true;
       polkit-1.fprintAuth = true;
       sudo.fprintAuth = true;

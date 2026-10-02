@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "version": "1.0",
-  "name": "Matugen Auto Theme",
+  "name": "Noctalia Auto Theme",
   "theme": {
     "colors": {
       "frame": [{{colors.surface.default.red}}, {{colors.surface.default.green}}, {{colors.surface.default.blue}}],

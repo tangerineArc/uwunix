@@ -1,0 +1,68 @@
+# Noctalia shell config — tracked in dotfiles, hot-reloaded on save (no rebuild needed).
+# Validate with: noctalia config validate ~/.dotfiles/config/noctalia
+# GUI edits in Settings are stored separately in ~/.local/state/noctalia/settings.toml
+# and take precedence over this file.
+
+[theme]
+mode = "dark"
+# Replaces `matugen image -t scheme-tonal-spot`: palette follows the wallpaper.
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+
+# App theming (replaces matugen): re-rendered live whenever the palette changes.
+[theme.templates.user.niri]
+input_path = "templates/niri.kdl"
+output_path = "$XDG_CACHE_HOME/noctalia/niri.kdl"
+
+[theme.templates.user.ghostty]
+input_path = "templates/colors.ghostty"
+output_path = "$XDG_CACHE_HOME/noctalia/colors.ghostty"
+post_hook = "pkill -SIGUSR2 ghostty || true"
+
+[theme.templates.user.btop]
+input_path = "templates/btop.theme"
+output_path = "$XDG_CONFIG_HOME/btop/themes/noctalia.theme"
+post_hook = "pkill -USR2 btop || true"
+
+[theme.templates.user.chromium]
+input_path = "templates/chromium-theme.json"
+output_path = "$XDG_CONFIG_HOME/chromium-theme/manifest.json"
+
+[theme.templates.user.gtk3]
+input_path = "templates/gtk.css"
+output_path = "$XDG_CONFIG_HOME/gtk-3.0/colors.css"
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[theme.templates.user.gtk4]
+input_path = "templates/gtk.css"
+output_path = "$XDG_CONFIG_HOME/gtk-4.0/colors.css"
+post_hook = "bash {{ config_dir }}/post-hook-scripts/gtk-themes-reload.sh"
+
+[wallpaper]
+enabled = true
+fill_mode = "crop"
+# Browsed by the wallpaper picker panel.
+directory = "~/Pictures/Wallpapers"
+
+[wallpaper.default]
+# Seeded by home-manager activation (~/.cache/current-wallpaper -> dotfiles asset)
+# and updated by the `fresco` script.
+path = "~/.cache/current-wallpaper"
+
+# Blurred copy of the wallpaper behind niri's overview.
+# Requires the `place-within-backdrop` layer-rule in niri config.
+[backdrop]
+enabled = true
+blur_intensity = 0.5
+tint_intensity = 0.3
+
+# Replaces the old hypridle timeouts: lock after 9 min, suspend after 10 min.
+[idle.behavior.lock]
+timeout = 540
+action = "lock"
+enabled = true
+
+[idle.behavior.suspend]
+timeout = 600
+action = "lock_and_suspend"
+enabled = true
