@@ -61,6 +61,13 @@ in {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
+
+    # Linux 6.18.57's tiny_power_button driver sends SIGRTMIN+4 directly to
+    # PID 1 on power-button events. Waking the laptop with the power button
+    # therefore triggers an immediate poweroff instead of resuming. Leave the
+    # power key to the regular ACPI button driver and logind instead.
+    blacklistedKernelModules = ["tiny_power_button"];
+    extraModprobeConfig = "options tiny_power_button power_signal=0";
   };
 
   # console = {
