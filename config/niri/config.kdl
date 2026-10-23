@@ -261,6 +261,7 @@ window-rule {
     }
 }
 window-rule {
+    match app-id="warp-taskbar"
     match app-id="zed" title="Settings"
     open-floating true
     background-effect {

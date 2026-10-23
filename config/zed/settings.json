@@ -7,6 +7,9 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "git_panel": {
+    "dock": "left"
+  },
   "cli_default_open_behavior": "new_window",
   "agent": {
     "inline_assistant_model": {
@@ -24,7 +27,7 @@
     "model_parameters": []
   },
   "project_panel": {
-    "dock": "left"
+    "dock": "right"
   },
   "sticky_scroll": {
     "enabled": false

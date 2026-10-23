@@ -240,6 +240,21 @@ in {
     }
   ];
 
+  # systemd 262 freezes user.slice while suspending. On this machine thaw
+  # sometimes fails with "Unit has a pending job" after resume, which leaves
+  # niri/noctalia (and the whole user session) frozen even though the kernel
+  # resumed fine. Disable session freezing for all sleep operations.
+  systemd.services = lib.genAttrs
+    [
+      "systemd-suspend"
+      "systemd-hibernate"
+      "systemd-hybrid-sleep"
+      "systemd-suspend-then-hibernate"
+    ]
+    (_: {
+      serviceConfig.Environment = ["SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=false"];
+    });
+
   users.users.${user} = {
     description = "Maester";
     extraGroups = ["adbusers" "docker" "input" "kvm" "wheel"];
